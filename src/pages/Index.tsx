@@ -4,9 +4,10 @@ import { Chapter } from "@/components/memoir/Chapter";
 import { About } from "@/components/memoir/About";
 import { Playlist, FloatingPlaylistTab } from "@/components/memoir/Playlist";
 import { Footer } from "@/components/memoir/Footer";
-import { chapters } from "@/data/chapters";
+import { useChapters } from "@/hooks/useChapters";
 
 const Index = () => {
+  const { chapters, source } = useChapters();
   // SEO: title + meta description for the memoir landing page.
   useEffect(() => {
     document.title = "The Weight of Quiet Hours — A Memoir by Eleanor Vance";
@@ -47,12 +48,12 @@ const Index = () => {
             The Chapters
           </span>
           <p className="font-display italic text-mist/70 mt-3 text-lg">
-            Three excerpts from the memoir
+            {source === "wordpress" ? "Live from the author's notebook" : "Three excerpts from the memoir"}
           </p>
         </div>
 
         {chapters.map((c, i) => (
-          <Chapter key={c.number} chapter={c} index={i} />
+          <Chapter key={`${c.number}-${i}`} chapter={c} index={i} />
         ))}
       </section>
 

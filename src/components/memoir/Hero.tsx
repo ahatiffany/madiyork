@@ -19,7 +19,7 @@ export const Hero = () => {
 
       {/* Top bar */}
       <nav className="relative z-10 flex items-center justify-between px-8 md:px-14 pt-8">
-        <span className="text-xs tracking-[0.4em] uppercase text-gold/90">Eleanor Vance</span>
+        <span className="text-xs tracking-[0.4em] uppercase text-gold/90">Madi York</span>
         <div className="hidden md:flex gap-8 text-xs tracking-[0.35em] uppercase text-parchment/70">
           <a href="#chapters" className="hover:text-gold transition-colors">Chapters</a>
           <a href="#playlist" className="hover:text-gold transition-colors">Playlist</a>
@@ -29,28 +29,12 @@ export const Hero = () => {
 
       {/* Centerpiece */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center h-[calc(100svh-7rem)] px-6">
-        <p
-          className="text-[10px] md:text-xs tracking-[0.6em] uppercase text-gold mb-6 opacity-0 animate-fade-in-slow"
-          style={{ animationDelay: "0.2s" }}
-        >
-          A Memoir · #1 New York Times Bestseller
-        </p>
-
         <AnimatedHeading
           as="h1"
-          text="The Weight of Quiet Hours"
+          text="Ari Winters: The Blue Hole"
           delay={0.4}
           className="text-5xl sm:text-7xl md:text-8xl lg:text-[8.5rem] text-parchment max-w-5xl"
         />
-
-        <p
-          className="mt-8 max-w-xl text-base md:text-lg text-mist/80 italic font-display opacity-0 animate-fade-in-slow"
-          style={{ animationDelay: "1.6s" }}
-        >
-          "A story told in fragments — of cities held in the dark,
-          of love returned to letters, of every quiet hour that
-          shaped a life."
-        </p>
 
         <div
           className="mt-12 opacity-0 animate-fade-in-slow"

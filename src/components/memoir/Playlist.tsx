@@ -19,7 +19,7 @@ export const Playlist = () => {
       <div className="max-w-5xl mx-auto text-center">
         <span className="text-xs tracking-[0.5em] uppercase text-gold">Interlude</span>
         <h2 className="font-display text-4xl md:text-6xl text-parchment mt-4 mb-6">
-          The Soundtrack of <em>Quiet Hours</em>
+          The Soundtrack of <em>“The Blue Hole”</em>
         </h2>
         <p className="text-mist/80 max-w-2xl mx-auto mb-14 leading-relaxed">
           Songs that lived alongside the writing — for the long evenings,
@@ -30,7 +30,7 @@ export const Playlist = () => {
           <div className="absolute -inset-6 bg-gradient-spotlight opacity-70 blur-2xl pointer-events-none" />
           <div className="relative rounded-md overflow-hidden shadow-cinematic border border-border bg-card">
             <iframe
-              title="The Weight of Quiet Hours — Memoir Playlist"
+              title="Ari Winters: The Blue Hole — Playlist"
               src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0"
               width="100%"
               height="420"

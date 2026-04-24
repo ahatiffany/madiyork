@@ -19,7 +19,7 @@ export const Playlist = () => {
       <div className="max-w-5xl mx-auto text-center">
         <span className="text-xs tracking-[0.5em] uppercase text-gold">Interlude</span>
         <h2 className="font-display text-4xl md:text-6xl text-parchment mt-4 mb-6">
-          The Soundtrack of <em>“The Blue Hole”</em>
+          The Soundtrack of <em>The Blue Hole</em>
         </h2>
         <p className="text-mist/80 max-w-2xl mx-auto mb-14 leading-relaxed">
           Songs that lived alongside the writing — for the long evenings,

@@ -31,7 +31,7 @@ export const Hero = () => {
       <div className="relative z-10 flex flex-col items-center justify-center text-center h-[calc(100svh-7rem)] px-6">
         <AnimatedHeading
           as="h1"
-          text="Ari Winters: The Blue Hole"
+          text={"Ari Winters:\nThe Blue Hole"}
           delay={0.4}
           className="text-5xl sm:text-7xl md:text-8xl lg:text-[8.5rem] text-parchment max-w-5xl"
         />

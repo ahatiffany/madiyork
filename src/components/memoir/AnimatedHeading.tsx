@@ -13,17 +13,25 @@ interface AnimatedHeadingProps {
  * Used for cinematic chapter and hero titles.
  */
 export const AnimatedHeading = ({ text, className, as: Tag = "h2", delay = 0 }: AnimatedHeadingProps) => {
-  const words = text.split(" ");
+  const lines = text.split("\n");
+  let wordIndex = 0;
   return (
     <Tag className={cn("font-display leading-[1.05]", className)}>
-      {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom mr-[0.25em]">
-          <span
-            className="inline-block opacity-0 animate-letter-rise"
-            style={{ animationDelay: `${delay + i * 0.08}s` }}
-          >
-            {word}
-          </span>
+      {lines.map((line, lineIdx) => (
+        <span key={lineIdx} className="block">
+          {line.split(" ").map((word) => {
+            const i = wordIndex++;
+            return (
+              <span key={i} className="inline-block overflow-hidden align-bottom mr-[0.25em]">
+                <span
+                  className="inline-block opacity-0 animate-letter-rise"
+                  style={{ animationDelay: `${delay + i * 0.08}s` }}
+                >
+                  {word}
+                </span>
+              </span>
+            );
+          })}
         </span>
       ))}
     </Tag>

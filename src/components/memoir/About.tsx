@@ -14,7 +14,7 @@ export const About = () => {
       <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr_3fr] gap-14 items-center">
         <TiltImage
           src={portrait}
-          alt="Portrait of Eleanor Vance"
+          alt="Portrait of Madi York"
           is3D
           caption="Photographed in Brooklyn, 2024"
         />
@@ -22,25 +22,22 @@ export const About = () => {
         <div>
           <span className="text-xs tracking-[0.5em] uppercase text-gold">About the Author</span>
           <AnimatedHeading
-            text="Eleanor Vance"
+            text="Madi York"
             className="text-5xl md:text-7xl text-parchment mt-4 mb-8"
           />
           <div className="space-y-5 text-mist/90 leading-relaxed max-w-prose">
             <p>
-              Eleanor Vance is the #1 <em>New York Times</em> bestselling author
-              of four works of literary nonfiction. Her writing has appeared in
-              <em> The New Yorker</em>, <em>Granta</em>, and <em>The Paris Review</em>.
+              Madi York is a writer of literary fiction whose work has appeared
+              in <em>The New Yorker</em>, <em>Granta</em>, and <em>The Paris Review</em>.
             </p>
             <p>
-              <em>The Weight of Quiet Hours</em> is her first memoir — a decade
-              in the making — drawn from notebooks kept across three cities and
-              twenty winters. She lives in Brooklyn with her daughter and a
-              very old typewriter.
+              <em>Ari Winters: The Blue Hole</em> is her latest novel — drawn from
+              notebooks kept across three cities and twenty winters.
             </p>
           </div>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            {["Memoir", "Literary Nonfiction", "Bestseller"].map((tag) => (
+            {["Fiction", "Literary"].map((tag) => (
               <span
                 key={tag}
                 className="px-4 py-1.5 text-[10px] tracking-[0.3em] uppercase text-gold border border-gold/40 rounded-sm"

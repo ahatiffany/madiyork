@@ -48,6 +48,29 @@ const splitParagraphs = (html: string): string[] => {
   return blocks.length ? blocks : [stripHtml(html)].filter(Boolean);
 };
 
+const firstImageSrc = (html: string): string => {
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return match?.[1] ?? "";
+};
+
+const taxonomyNames = (taxonomy: Record<string, unknown>): string[] =>
+  Object.entries(taxonomy ?? {}).flatMap(([key, value]) => {
+    const names = [key];
+    if (typeof value === "string") names.push(value);
+    if (value && typeof value === "object") {
+      const record = value as Record<string, unknown>;
+      ["name", "slug", "title"].forEach((field) => {
+        if (typeof record[field] === "string") names.push(record[field] as string);
+      });
+    }
+    return names.map((name) => name.toLowerCase().trim()).filter(Boolean);
+  });
+
+const isChapterPost = (post: WPPost): boolean => {
+  const names = [...taxonomyNames(post.categories), ...taxonomyNames(post.tags)];
+  return names.includes("chapter") || names.includes("chapters");
+};
+
 const numberWord = (n: number): string => {
   const words = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
     "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty"];
@@ -76,13 +99,17 @@ Deno.serve(async (req) => {
     }
 
     const posts: WPPost[] = data.posts ?? [];
-    const chapters: Chapter[] = posts.map((p, i) => {
+    const chapterPosts = posts.filter(isChapterPost);
+    console.log(`wordpress-chapters fetched ${posts.length} published posts; ${chapterPosts.length} chapter posts`);
+
+    const chapters: Chapter[] = chapterPosts.map((p, i) => {
       const tags = Object.keys(p.tags ?? {}).map((t) => t.toLowerCase());
       const excerptText = stripHtml(p.excerpt || "");
       const bodyParas = splitParagraphs(p.content || "");
       // First paragraph as pull-quote if no excerpt
       const pullQuote = excerptText || bodyParas[0] || "";
       const body = excerptText ? bodyParas : bodyParas.slice(1);
+      const image = p.featured_image || firstImageSrc(p.content || "");
 
       return {
         id: p.ID,
@@ -90,7 +117,7 @@ Deno.serve(async (req) => {
         title: stripHtml(p.title) || `Chapter ${i + 1}`,
         pullQuote,
         body: body.length ? body : bodyParas,
-        image: p.featured_image || "",
+        image,
         imageAlt: stripHtml(p.title) || `Chapter ${i + 1} image`,
         imageCaption: new Date(p.date).toLocaleDateString("en-US", { month: "long", year: "numeric" }),
         is3D: tags.includes("3d"),

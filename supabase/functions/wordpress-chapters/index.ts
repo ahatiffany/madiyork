@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     const WORDPRESS_COM_API_KEY = Deno.env.get("WORDPRESS_COM_API_KEY");
     if (!WORDPRESS_COM_API_KEY) throw new Error("WORDPRESS_COM_API_KEY is not configured");
 
-    const url = `${GATEWAY}/rest/v1.1/sites/${SITE}/posts?number=20&order=ASC&fields=ID,slug,title,excerpt,content,date,featured_image,tags,categories`;
+    const url = `${GATEWAY}/rest/v1.1/sites/${SITE}/posts?number=20&status=publish&type=post&order=ASC&fields=ID,slug,title,excerpt,content,date,featured_image,tags,categories`;
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ chapters }), {
       status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=120" },
+      headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";

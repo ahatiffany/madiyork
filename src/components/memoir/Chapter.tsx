@@ -67,7 +67,7 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
             "{chapter.pullQuote}"
           </p>
 
-          <div className="space-y-5 text-mist/90 leading-relaxed max-w-prose">
+          <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose">
             {chapter.body.map((p, i) => (
               <p key={i}>{p}</p>
             ))}

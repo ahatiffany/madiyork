@@ -11,12 +11,11 @@ export const About = () => {
       id="about"
       className="reveal relative py-28 md:py-40 px-6 md:px-14"
     >
-      <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr_3fr] gap-14 items-center">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-[auto_1fr] gap-8 md:gap-10 items-center">
         <div className="max-w-[280px] md:max-w-[340px] mx-auto md:mx-0 w-full">
           <TiltImage
             src={logo}
             alt="MY York logo — stylized M with feather quill"
-            is3D
           />
         </div>
 

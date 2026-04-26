@@ -8,7 +8,7 @@ export const Hero = () => {
       <div className="absolute inset-0">
         <img
           src={heroImg}
-          alt="A woman in a dark coat at the edge of a misty pier, looking toward distant city lights"
+          alt="A teenage boy in a dark coat standing at the end of a misty pier, looking toward distant city lights"
           className="h-full w-full object-cover ken-burns"
           fetchPriority="high"
         />
@@ -31,7 +31,7 @@ export const Hero = () => {
       <div className="relative z-10 flex flex-col items-center justify-center text-center h-[calc(100svh-7rem)] px-6">
         <AnimatedHeading
           as="h1"
-          text={"Ari Winters:\nThe Blue Hole"}
+          text={"ARI WYNTER:\nThe Blue Hole"}
           delay={0.4}
           className="text-5xl sm:text-7xl md:text-8xl lg:text-[8.5rem] text-parchment max-w-5xl"
         />

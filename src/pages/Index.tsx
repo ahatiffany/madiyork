@@ -10,7 +10,7 @@ const Index = () => {
   const { chapters, source } = useChapters();
   // SEO: title + meta description for the memoir landing page.
   useEffect(() => {
-    document.title = "Ari Winters: The Blue Hole — by Madi York";
+    document.title = "ARI WYNTER: The Blue Hole — by Madi York";
 
     const setMeta = (name: string, content: string) => {
       let tag = document.querySelector(`meta[name="${name}"]`);
@@ -24,7 +24,7 @@ const Index = () => {
 
     setMeta(
       "description",
-      "Ari Winters: The Blue Hole — by Madi York. Read excerpts, see photographs, and listen to the soundtrack.",
+      "ARI WYNTER: The Blue Hole — by Madi York. Read excerpts, see photographs, and listen to the soundtrack.",
     );
 
     // Canonical
@@ -70,12 +70,12 @@ const Index = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Book",
-            name: "Ari Winters: The Blue Hole",
+            name: "ARI WYNTER: The Blue Hole",
             author: { "@type": "Person", name: "Madi York" },
             bookFormat: "https://schema.org/Hardcover",
             inLanguage: "en",
             description:
-              "Ari Winters: The Blue Hole — a book by Madi York.",
+              "ARI WYNTER: The Blue Hole — a book by Madi York.",
           }),
         }}
       />

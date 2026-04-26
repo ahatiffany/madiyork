@@ -27,8 +27,8 @@ export const Hero = () => {
         </div>
       </nav>
 
-      {/* Centerpiece — title centered, anchored toward upper third to avoid silhouette */}
-      <div className="relative z-10 flex flex-col items-center justify-start text-center h-[calc(100svh-7rem)] pt-[8vh] md:pt-[10vh] px-8 md:px-14">
+      {/* Centerpiece — title centered, anchored toward the lower third */}
+      <div className="relative z-10 flex flex-col items-center justify-end text-center h-[calc(100svh-7rem)] pb-[12vh] md:pb-[14vh] px-8 md:px-14">
         <h1 className="font-display leading-[1.05] text-5xl sm:text-6xl md:text-7xl lg:text-8xl max-w-4xl">
           <span className="block overflow-hidden">
             <span

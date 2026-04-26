@@ -47,9 +47,32 @@ const Index = () => {
           <span className="text-[10px] tracking-[0.6em] uppercase text-gold/80">
             The Chapters
           </span>
-          <p className="font-display italic text-mist/70 mt-3 text-lg">
-            {source === "wordpress" ? "Live from the author's notebook" : "Three excerpts from the memoir"}
-          </p>
+
+          {source === "wordpress" ? (
+            <nav aria-label="Table of contents" className="mt-6 max-w-2xl mx-auto">
+              <ul className="flex flex-col gap-2">
+                {chapters.map((c, i) => (
+                  <li key={`toc-${i}`}>
+                    <a
+                      href={`#chapter-${i + 1}`}
+                      className="group inline-flex items-baseline gap-3 font-display italic text-mist/80 hover:text-gold transition-colors"
+                    >
+                      <span className="text-[10px] not-italic tracking-[0.4em] uppercase text-gold/70">
+                        {c.number}
+                      </span>
+                      <span className="text-lg group-hover:underline underline-offset-4 decoration-gold/50">
+                        {c.title}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : (
+            <p className="font-display italic text-mist/70 mt-3 text-lg">
+              Three excerpts from the memoir
+            </p>
+          )}
         </div>
 
         {chapters.map((c, i) => (

@@ -42,8 +42,22 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         {/* Title */}
         <AnimatedHeading
           text={chapter.title}
-          className="text-4xl md:text-6xl text-parchment mb-8"
+          className="text-4xl md:text-6xl text-parchment mb-10"
         />
+
+        {/* Featured image — anchored between title and excerpt, uniform square */}
+        <div className="relative w-full max-w-md mx-auto mb-10">
+          <div className="absolute -inset-8 bg-gradient-spotlight opacity-60 blur-2xl pointer-events-none" />
+          <div className="relative aspect-square overflow-hidden rounded-sm shadow-cinematic">
+            <TiltImage
+              src={chapter.image}
+              alt={chapter.imageAlt}
+              caption={chapter.imageCaption}
+              is3D={chapter.is3D}
+              className="absolute inset-0 h-full w-full [&_figure]:h-full [&>div]:h-full"
+            />
+          </div>
+        </div>
 
         {/* Pull quote */}
         <p className="font-display italic text-2xl md:text-3xl text-gold/90 leading-snug mb-10 max-w-3xl border-l-2 border-r-2 border-gold/40 px-6">
@@ -51,22 +65,10 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         </p>
 
         {/* Body — justified */}
-        <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose text-justify mb-12">
+        <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose text-justify">
           {chapter.body.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
-        </div>
-
-        {/* Featured image — centered, below excerpt */}
-        <div className="relative w-full max-w-3xl mx-auto">
-          <div className="absolute -inset-10 bg-gradient-spotlight opacity-60 blur-2xl pointer-events-none" />
-          <TiltImage
-            src={chapter.image}
-            alt={chapter.imageAlt}
-            caption={chapter.imageCaption}
-            is3D={chapter.is3D}
-            className="relative"
-          />
         </div>
       </div>
     </section>

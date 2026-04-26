@@ -27,17 +27,29 @@ export const Hero = () => {
         </div>
       </nav>
 
-      {/* Centerpiece — title anchored to the right, leaving the boy on the left */}
-      <div className="relative z-10 flex flex-col items-end justify-center text-right h-[calc(100svh-7rem)] px-8 md:px-14">
-        <AnimatedHeading
-          as="h1"
-          text={"ARI WYNTER:\nThe Blue Hole"}
-          delay={0.4}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-parchment max-w-2xl"
-        />
+      {/* Centerpiece — title centered */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center h-[calc(100svh-7rem)] px-8 md:px-14">
+        <h1 className="font-display leading-[1.05] text-5xl sm:text-6xl md:text-7xl lg:text-8xl max-w-4xl">
+          <span className="block overflow-hidden">
+            <span
+              className="inline-block opacity-0 animate-letter-rise text-gold"
+              style={{ animationDelay: "0.4s" }}
+            >
+              ARI WYNTER:
+            </span>
+          </span>
+          <span className="block overflow-hidden">
+            <span
+              className="inline-block opacity-0 animate-letter-rise text-parchment"
+              style={{ animationDelay: "0.7s" }}
+            >
+              The Blue Hole
+            </span>
+          </span>
+        </h1>
 
         <div
-          className="mt-12 opacity-0 animate-fade-in-slow self-end"
+          className="mt-12 opacity-0 animate-fade-in-slow"
           style={{ animationDelay: "2s" }}
         >
           <a

@@ -64,10 +64,10 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         {/* Pull quote */}
         <figure className="mb-10 max-w-3xl">
           <blockquote className="font-display italic text-2xl md:text-3xl text-gold/90 leading-snug border-l-2 border-r-2 border-gold/40 px-6">
-            "{chapter.pullQuote}"
+            “{chapter.pullQuote}”
           </blockquote>
           {chapter.pullQuoteCitation && (
-            <figcaption className="mt-4 text-xs tracking-[0.4em] uppercase text-gold/70">
+            <figcaption className="mt-4 text-sm md:text-base tracking-normal text-gold/70">
               — {chapter.pullQuoteCitation}
             </figcaption>
           )}

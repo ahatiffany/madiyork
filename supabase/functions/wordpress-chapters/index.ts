@@ -52,6 +52,9 @@ const splitParagraphs = (html: string): string[] => {
   return blocks.length ? blocks : [stripHtml(html)].filter(Boolean);
 };
 
+const stripWordPressExcerptMore = (text: string) =>
+  text.replace(/\s*(?:\[&hellip;\]|\[…\]|&hellip;|…)\s*$/i, "").trim();
+
 /**
  * Extract a pull-quote from a WordPress excerpt. Supports:
  *  - Default excerpt block (plain <p> text)
@@ -67,11 +70,32 @@ const parseExcerpt = (html: string): { quote: string; citation?: string } => {
     const citation = stripHtml(citeMatch[1]);
     // Quote is everything else with the <cite> removed.
     const withoutCite = html.replace(citeMatch[0], " ");
-    const quote = stripHtml(withoutCite);
+    const quote = stripWordPressExcerptMore(stripHtml(withoutCite));
     return { quote, citation: citation || undefined };
   }
 
-  return { quote: stripHtml(html) };
+  return { quote: stripWordPressExcerptMore(stripHtml(html)) };
+};
+
+/** Extract and remove the first WordPress pullquote/blockquote from post content. */
+const extractPullQuoteFromContent = (html: string): { quote: string; citation?: string; contentHtml: string } => {
+  const pullQuoteMatch = html.match(/<figure[^>]*class=["'][^"']*(?:wp-block-pullquote|wp-block-quote)[^"']*["'][^>]*>[\s\S]*?<\/figure>/i)
+    ?? html.match(/<blockquote[\s\S]*?<\/blockquote>/i);
+
+  if (!pullQuoteMatch) return { quote: "", contentHtml: html };
+
+  const blockHtml = pullQuoteMatch[0];
+  const citeMatch = blockHtml.match(/<cite[^>]*>([\s\S]*?)<\/cite>/i);
+  const citation = citeMatch ? stripHtml(citeMatch[1]) : undefined;
+  const withoutCite = citeMatch ? blockHtml.replace(citeMatch[0], " ") : blockHtml;
+  const paragraphMatch = withoutCite.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+  const quote = stripWordPressExcerptMore(stripHtml(paragraphMatch?.[1] ?? withoutCite));
+
+  return {
+    quote,
+    citation: citation || undefined,
+    contentHtml: html.replace(blockHtml, " "),
+  };
 };
 
 const firstImageSrc = (html: string): string => {

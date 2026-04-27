@@ -52,6 +52,9 @@ const splitParagraphs = (html: string): string[] => {
   return blocks.length ? blocks : [stripHtml(html)].filter(Boolean);
 };
 
+const stripWordPressExcerptMore = (text: string) =>
+  text.replace(/\s*(?:\[&hellip;\]|\[…\]|&hellip;|…)\s*$/i, "").trim();
+
 /**
  * Extract a pull-quote from a WordPress excerpt. Supports:
  *  - Default excerpt block (plain <p> text)
@@ -67,11 +70,32 @@ const parseExcerpt = (html: string): { quote: string; citation?: string } => {
     const citation = stripHtml(citeMatch[1]);
     // Quote is everything else with the <cite> removed.
     const withoutCite = html.replace(citeMatch[0], " ");
-    const quote = stripHtml(withoutCite);
+    const quote = stripWordPressExcerptMore(stripHtml(withoutCite));
     return { quote, citation: citation || undefined };
   }
 
-  return { quote: stripHtml(html) };
+  return { quote: stripWordPressExcerptMore(stripHtml(html)) };
+};
+
+/** Extract and remove the first WordPress pullquote/blockquote from post content. */
+const extractPullQuoteFromContent = (html: string): { quote: string; citation?: string; contentHtml: string } => {
+  const pullQuoteMatch = html.match(/<figure[^>]*class=["'][^"']*(?:wp-block-pullquote|wp-block-quote)[^"']*["'][^>]*>[\s\S]*?<\/figure>/i)
+    ?? html.match(/<blockquote[\s\S]*?<\/blockquote>/i);
+
+  if (!pullQuoteMatch) return { quote: "", contentHtml: html };
+
+  const blockHtml = pullQuoteMatch[0];
+  const citeMatch = blockHtml.match(/<cite[^>]*>([\s\S]*?)<\/cite>/i);
+  const citation = citeMatch ? stripHtml(citeMatch[1]) : undefined;
+  const withoutCite = citeMatch ? blockHtml.replace(citeMatch[0], " ") : blockHtml;
+  const paragraphMatch = withoutCite.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+  const quote = stripWordPressExcerptMore(stripHtml(paragraphMatch?.[1] ?? withoutCite));
+
+  return {
+    quote,
+    citation: citation || undefined,
+    contentHtml: html.replace(blockHtml, " "),
+  };
 };
 
 const firstImageSrc = (html: string): string => {
@@ -131,10 +155,12 @@ Deno.serve(async (req) => {
     const chapters: Chapter[] = chapterPosts.map((p, i) => {
       const tags = Object.keys(p.tags ?? {}).map((t) => t.toLowerCase());
       const { quote: excerptQuote, citation: excerptCitation } = parseExcerpt(p.excerpt || "");
-      const bodyParas = splitParagraphs(p.content || "");
+      const contentPullQuote = extractPullQuoteFromContent(p.content || "");
+      const bodyParas = splitParagraphs(contentPullQuote.contentHtml || "");
       // First paragraph as pull-quote if no excerpt
-      const pullQuote = excerptQuote || bodyParas[0] || "";
-      const body = excerptQuote ? bodyParas : bodyParas.slice(1);
+      const pullQuote = contentPullQuote.quote || excerptQuote || bodyParas[0] || "";
+      const pullQuoteCitation = contentPullQuote.citation || excerptCitation;
+      const body = contentPullQuote.quote || excerptQuote ? bodyParas : bodyParas.slice(1);
       const image = p.featured_image || firstImageSrc(p.content || "");
 
       return {
@@ -142,7 +168,7 @@ Deno.serve(async (req) => {
         number: `Chapter ${numberWord(i + 1)}`,
         title: stripHtml(p.title) || `Chapter ${i + 1}`,
         pullQuote,
-        pullQuoteCitation: excerptCitation,
+        pullQuoteCitation,
         body: body.length ? body : bodyParas,
         image,
         imageAlt: stripHtml(p.title) || `Chapter ${i + 1} image`,

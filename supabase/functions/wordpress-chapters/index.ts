@@ -22,6 +22,7 @@ interface Chapter {
   number: string;
   title: string;
   pullQuote: string;
+  pullQuoteCitation?: string;
   body: string[];
   image: string;
   imageAlt: string;
@@ -38,14 +39,39 @@ const stripHtml = (html: string) =>
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
     .replace(/&#8220;|&#8221;/g, '"')
+    .replace(/&#8211;|&#8212;/g, "—")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
     .trim();
 
 const splitParagraphs = (html: string): string[] => {
   const blocks = html.split(/<\/p>/i).map((b) => stripHtml(b)).filter(Boolean);
   return blocks.length ? blocks : [stripHtml(html)].filter(Boolean);
+};
+
+/**
+ * Extract a pull-quote from a WordPress excerpt. Supports:
+ *  - Default excerpt block (plain <p> text)
+ *  - Pullquote block with optional <cite> citation
+ *    <figure class="wp-block-pullquote"><blockquote><p>quote</p><cite>citation</cite></blockquote></figure>
+ */
+const parseExcerpt = (html: string): { quote: string; citation?: string } => {
+  if (!html) return { quote: "" };
+
+  // Look for a <cite>…</cite> anywhere in the excerpt (pullquote block).
+  const citeMatch = html.match(/<cite[^>]*>([\s\S]*?)<\/cite>/i);
+  if (citeMatch) {
+    const citation = stripHtml(citeMatch[1]);
+    // Quote is everything else with the <cite> removed.
+    const withoutCite = html.replace(citeMatch[0], " ");
+    const quote = stripHtml(withoutCite);
+    return { quote, citation: citation || undefined };
+  }
+
+  return { quote: stripHtml(html) };
 };
 
 const firstImageSrc = (html: string): string => {

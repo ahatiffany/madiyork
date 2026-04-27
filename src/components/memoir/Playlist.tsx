@@ -22,8 +22,9 @@ export const Playlist = () => {
           The Soundtrack of <em>The Blue Hole</em>
         </h2>
         <p className="text-mist/80 max-w-2xl mx-auto mb-14 leading-relaxed">
-          Songs that inspired the writing. Press play and be transported to the
-          world of ARI WYNTER.
+          Songs that inspired the writing.
+          <br />
+          Press play and be transported to the world of ARI WYNTER.
         </p>
 
         <div className="relative">

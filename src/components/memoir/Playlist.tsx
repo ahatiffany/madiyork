@@ -22,8 +22,8 @@ export const Playlist = () => {
           The Soundtrack of <em>The Blue Hole</em>
         </h2>
         <p className="text-mist/80 max-w-2xl mx-auto mb-14 leading-relaxed">
-          Songs that lived alongside the writing — for the long evenings,
-          the train rides, and the silences in between. Press play and read on.
+          Songs that inspired the writing. Press play and be transported to the
+          world of ARI WYNTER.
         </p>
 
         <div className="relative">
@@ -31,7 +31,7 @@ export const Playlist = () => {
           <div className="relative rounded-md overflow-hidden shadow-cinematic border border-border bg-card">
             <iframe
               title="Ari Winters: The Blue Hole — Playlist"
-              src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0"
+              src="https://open.spotify.com/embed/playlist/3qHLTcjpo2tabtaG10xwSs?utm_source=generator&theme=0"
               width="100%"
               height="420"
               frameBorder={0}
@@ -83,7 +83,7 @@ export const FloatingPlaylistTab = () => {
         >
           <iframe
             title="Floating playlist"
-            src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0"
+            src="https://open.spotify.com/embed/playlist/3qHLTcjpo2tabtaG10xwSs?utm_source=generator&theme=0"
             width="100%"
             height="160"
             frameBorder={0}

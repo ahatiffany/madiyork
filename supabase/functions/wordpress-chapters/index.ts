@@ -130,11 +130,11 @@ Deno.serve(async (req) => {
 
     const chapters: Chapter[] = chapterPosts.map((p, i) => {
       const tags = Object.keys(p.tags ?? {}).map((t) => t.toLowerCase());
-      const excerptText = stripHtml(p.excerpt || "");
+      const { quote: excerptQuote, citation: excerptCitation } = parseExcerpt(p.excerpt || "");
       const bodyParas = splitParagraphs(p.content || "");
       // First paragraph as pull-quote if no excerpt
-      const pullQuote = excerptText || bodyParas[0] || "";
-      const body = excerptText ? bodyParas : bodyParas.slice(1);
+      const pullQuote = excerptQuote || bodyParas[0] || "";
+      const body = excerptQuote ? bodyParas : bodyParas.slice(1);
       const image = p.featured_image || firstImageSrc(p.content || "");
 
       return {
@@ -142,6 +142,7 @@ Deno.serve(async (req) => {
         number: `Chapter ${numberWord(i + 1)}`,
         title: stripHtml(p.title) || `Chapter ${i + 1}`,
         pullQuote,
+        pullQuoteCitation: excerptCitation,
         body: body.length ? body : bodyParas,
         image,
         imageAlt: stripHtml(p.title) || `Chapter ${i + 1} image`,

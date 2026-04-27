@@ -6,6 +6,8 @@ export interface ChapterData {
   number: string;
   title: string;
   pullQuote: string;
+  /** Optional citation shown beneath the pull-quote (from a WP pullquote block). */
+  pullQuoteCitation?: string;
   body: string[];
   image: string;
   imageAlt: string;
@@ -60,9 +62,16 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         </div>
 
         {/* Pull quote */}
-        <p className="font-display italic text-2xl md:text-3xl text-gold/90 leading-snug mb-10 max-w-3xl border-l-2 border-r-2 border-gold/40 px-6">
-          "{chapter.pullQuote}"
-        </p>
+        <figure className="mb-10 max-w-3xl">
+          <blockquote className="font-display italic text-2xl md:text-3xl text-gold/90 leading-snug border-l-2 border-r-2 border-gold/40 px-6">
+            "{chapter.pullQuote}"
+          </blockquote>
+          {chapter.pullQuoteCitation && (
+            <figcaption className="mt-4 text-xs tracking-[0.4em] uppercase text-gold/70">
+              — {chapter.pullQuoteCitation}
+            </figcaption>
+          )}
+        </figure>
 
         {/* Body — justified */}
         <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose text-justify">

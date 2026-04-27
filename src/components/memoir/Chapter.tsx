@@ -6,6 +6,8 @@ export interface ChapterData {
   number: string;
   title: string;
   pullQuote: string;
+  /** Optional citation shown beneath the pull-quote (from a WP pullquote block). */
+  pullQuoteCitation?: string;
   body: string[];
   image: string;
   imageAlt: string;

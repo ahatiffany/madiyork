@@ -18,18 +18,22 @@ export const Hero = () => {
       </div>
 
       {/* Top bar */}
-      <nav className="relative z-10 flex items-center justify-between px-8 md:px-14 pt-8">
-        <span className="text-xs tracking-[0.4em] uppercase text-gold/90">Madi York</span>
-        <div className="hidden md:flex gap-8 text-xs tracking-[0.35em] uppercase text-parchment/70">
+      <nav className="relative z-10 flex items-center justify-between px-5 sm:px-8 md:px-14 pt-6 md:pt-8">
+        <span className="text-[10px] sm:text-xs tracking-[0.4em] uppercase text-gold/90">Madi York</span>
+        <div className="hidden md:flex gap-6 lg:gap-8 text-xs tracking-[0.35em] uppercase text-parchment/70">
           <a href="#chapters" className="hover:text-gold transition-colors">Chapters</a>
           <a href="#playlist" className="hover:text-gold transition-colors">Playlist</a>
           <a href="#about" className="hover:text-gold transition-colors">About</a>
         </div>
+        <div className="flex md:hidden gap-4 text-[10px] tracking-[0.3em] uppercase text-parchment/70">
+          <a href="#chapters" className="hover:text-gold transition-colors">Read</a>
+          <a href="#playlist" className="hover:text-gold transition-colors">Listen</a>
+        </div>
       </nav>
 
       {/* Centerpiece — title centered, anchored toward the lower third */}
-      <div className="relative z-10 flex flex-col items-center justify-end text-center h-[calc(100svh-7rem)] pb-[12vh] md:pb-[14vh] px-8 md:px-14">
-        <h1 className="font-display leading-[1.05] text-5xl sm:text-6xl md:text-7xl lg:text-8xl max-w-4xl">
+      <div className="relative z-10 flex flex-col items-center justify-end text-center h-[calc(100svh-6rem)] md:h-[calc(100svh-7rem)] pb-[10vh] sm:pb-[12vh] md:pb-[14vh] px-5 sm:px-8 md:px-14">
+        <h1 className="font-display leading-[1.05] text-4xl sm:text-6xl md:text-7xl lg:text-8xl max-w-4xl">
           <span className="block overflow-hidden">
             <span
               className="inline-block opacity-0 animate-letter-rise text-gold"

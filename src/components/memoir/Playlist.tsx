@@ -14,31 +14,31 @@ export const Playlist = () => {
     <section
       ref={sectionRef}
       id="playlist"
-      className="reveal relative py-28 md:py-40 px-6 md:px-14"
+      className="reveal relative py-20 sm:py-28 md:py-40 px-5 sm:px-6 md:px-14"
     >
       <div className="max-w-5xl mx-auto text-center">
-        <span className="text-xs tracking-[0.5em] uppercase text-gold">Interlude</span>
-        <h2 className="font-display text-4xl md:text-6xl text-parchment mt-4 mb-6">
+        <span className="text-[10px] sm:text-xs tracking-[0.5em] uppercase text-gold">Interlude</span>
+        <h2 className="font-display text-3xl sm:text-4xl md:text-6xl text-parchment mt-4 mb-6">
           The Soundtrack of <em>The Blue Hole</em>
         </h2>
-        <p className="text-mist/80 max-w-2xl mx-auto mb-14 leading-relaxed">
+        <p className="text-sm sm:text-base text-mist/80 max-w-2xl mx-auto mb-10 sm:mb-14 leading-relaxed px-2">
           Songs that inspired the writing.
           <br />
           Press play and be transported to the world of ARI WYNTER.
         </p>
 
         <div className="relative">
-          <div className="absolute -inset-6 bg-gradient-spotlight opacity-70 blur-2xl pointer-events-none" />
+          <div className="absolute -inset-4 sm:-inset-6 bg-gradient-spotlight opacity-70 blur-2xl pointer-events-none" />
           <div className="relative rounded-md overflow-hidden shadow-cinematic border border-border bg-card">
             <iframe
               title="Ari Winters: The Blue Hole — Playlist"
               src="https://open.spotify.com/embed/playlist/3qHLTcjpo2tabtaG10xwSs?utm_source=generator&theme=0"
               width="100%"
-              height="420"
+              height="380"
               frameBorder={0}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
-              className="block"
+              className="block w-full h-[352px] sm:h-[420px]"
             />
           </div>
         </div>

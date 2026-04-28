@@ -8,7 +8,7 @@ export const Hero = () => {
       <div className="absolute inset-0">
         <img
           src={heroImg}
-          alt="A teenage boy in a dark coat standing at the end of a misty pier, looking toward distant city lights"
+          alt="A teenaged merman with long dark hair and an iridescent blue tail rising from the deep blue abyss of an underwater sinkhole"
           className="h-full w-full object-cover ken-burns"
           fetchPriority="high"
         />

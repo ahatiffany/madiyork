@@ -43,8 +43,8 @@ const Index = () => {
 
       <section id="chapters" className="relative">
         {/* Soft transition from hero into chapters */}
-        <div className="relative pt-20 pb-4 px-6 text-center">
-          <span className="text-[10px] tracking-[0.6em] uppercase text-gold/80">
+        <div className="relative pt-16 sm:pt-20 pb-4 px-5 sm:px-6 text-center">
+          <span className="text-[10px] tracking-[0.5em] sm:tracking-[0.6em] uppercase text-gold/80">
             The Chapters
           </span>
 
@@ -55,12 +55,12 @@ const Index = () => {
                   <li key={`toc-${i}`}>
                     <a
                       href={`#chapter-${i + 1}`}
-                      className="group inline-flex items-baseline gap-3 font-display italic text-mist/80 hover:text-gold transition-colors"
+                      className="group inline-flex flex-wrap items-baseline justify-center gap-2 sm:gap-3 font-display italic text-mist/80 hover:text-gold transition-colors px-2"
                     >
                       <span className="text-[10px] not-italic tracking-[0.4em] uppercase text-gold/70">
                         {c.number}
                       </span>
-                      <span className="text-lg group-hover:underline underline-offset-4 decoration-gold/50">
+                      <span className="text-base sm:text-lg group-hover:underline underline-offset-4 decoration-gold/50">
                         {c.title}
                       </span>
                     </a>
@@ -69,7 +69,7 @@ const Index = () => {
               </ul>
             </nav>
           ) : (
-            <p className="font-display italic text-mist/70 mt-3 text-lg">
+            <p className="font-display italic text-mist/70 mt-3 text-base sm:text-lg">
               Three excerpts from the memoir
             </p>
           )}

@@ -62,12 +62,12 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         </div>
 
         {/* Pull quote */}
-        <figure className="mb-8 sm:mb-10 max-w-3xl">
-          <blockquote className="font-display italic text-xl sm:text-2xl md:text-3xl text-gold/90 leading-snug border-l-2 border-r-2 border-gold/40 px-4 sm:px-6">
+        <figure className="mb-8 sm:mb-10 max-w-xl sm:max-w-2xl mx-auto">
+          <blockquote className="font-display italic text-xl sm:text-2xl md:text-3xl text-gold/90 leading-snug border-l-2 border-r-2 border-gold/40 px-4 sm:px-6 mx-auto text-balance max-w-[28ch] sm:max-w-[36ch] md:max-w-[44ch]">
             “{chapter.pullQuote}”
           </blockquote>
           {chapter.pullQuoteCitation && (
-            <figcaption className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base tracking-normal text-gold/70">
+            <figcaption className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base tracking-normal text-gold/70 mx-auto max-w-[24ch] text-balance">
               — {chapter.pullQuoteCitation}
             </figcaption>
           )}

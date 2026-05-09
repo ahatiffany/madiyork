@@ -43,7 +43,7 @@ const Index = () => {
 
       <section id="chapters" className="relative">
         {/* Soft transition from hero into chapters */}
-        <div className="relative pt-16 sm:pt-20 pb-4 px-5 sm:px-6 text-center">
+        <div id="toc" className="relative pt-16 sm:pt-20 pb-4 px-5 sm:px-6 text-center scroll-mt-20">
           <span className="text-[10px] tracking-[0.5em] sm:tracking-[0.6em] uppercase text-gold/80">
             The Chapters
           </span>

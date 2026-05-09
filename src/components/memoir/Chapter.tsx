@@ -79,6 +79,18 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
             <p key={i}>{p}</p>
           ))}
         </div>
+
+        {/* Back to table of contents */}
+        <nav aria-label="Back to table of contents" className="mt-12 sm:mt-16">
+          <a
+            href="#toc"
+            className="group inline-flex items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-xs tracking-[0.5em] uppercase text-gold/80 hover:text-gold transition-colors"
+          >
+            <span className="h-px w-8 sm:w-12 bg-gold/40 shimmer" />
+            <span>↑ Back to chapters</span>
+            <span className="h-px w-8 sm:w-12 bg-gold/40 shimmer" />
+          </a>
+        </nav>
       </div>
     </section>
   );

@@ -1,26 +1,16 @@
-## Goal
-Make the pull-quote (with citation) and default excerpt block visually balanced so the quote line(s) and the citation line have similar visual length — no single line dominates.
+## Add "Back to Chapters" link at the end of each chapter
 
-## Where it applies
-Any place an excerpt/pullquote renders. In this project that's currently the `<figure>` block inside `src/components/memoir/Chapter.tsx` (used for both the WordPress default excerpt and the pullquote-with-citation block, since both flow through `chapter.pullQuote` + optional `chapter.pullQuoteCitation`).
+### What
+After each chapter's body text, add a small centered link that scrolls the reader back to the Table of Contents section (which sits just below the hero image).
 
-## Changes
+### How
+1. In `src/pages/Index.tsx`, give the existing TOC wrapper an `id` (e.g. `id="toc"`) and a matching `scroll-mt-20` so the anchor lands just below the sticky-ish top.
+2. In `src/components/memoir/Chapter.tsx`, after the body `<div>`, add a centered anchor:
+   - Text: "↑ Back to chapters"
+   - `href="#toc"`
+   - Styled with the existing gold accent: small uppercase tracked label (`text-[10px] tracking-[0.5em] uppercase text-gold/80 hover:text-gold`), bracketed by the same shimmer hairlines used on the chapter eyebrow for visual symmetry.
+   - Wrap in a `<nav aria-label="Back to table of contents">` with top margin (`mt-12 sm:mt-16`).
 
-### `src/components/memoir/Chapter.tsx` — pull-quote figure
-1. Constrain the quote width tighter so long quotes wrap into ~2 balanced lines instead of one wide line:
-   - Replace `max-w-3xl` on the `<figure>` with `max-w-xl sm:max-w-2xl`.
-2. Apply CSS line-balancing to both the quote and citation:
-   - Add `text-balance` (Tailwind utility for `text-wrap: balance`) to the `<blockquote>` and `<figcaption>`.
-   - Add `mx-auto` + `max-w-[28ch] sm:max-w-[36ch] md:max-w-[44ch]` on the `<blockquote>` so wrapping is driven by character count, producing visually similar line widths regardless of quote length.
-3. Keep the citation visually lighter but make sure its line sits centered under the quote with comparable visual length:
-   - Add `max-w-[24ch] mx-auto text-balance` to the `<figcaption>`.
-4. Leave font sizes/colors as-is (per "balance line lengths" choice — not equalizing weight/size).
-
-### Result
-- Short quotes still center cleanly.
-- Long quotes break into ~2 balanced lines (`text-wrap: balance`) with a constrained measure so no line stretches the full container.
-- Citation wraps within a narrow measure and stays centered, matching the quote's visual rhythm.
-
-## Out of scope
-- No edge-function/business-logic changes — `wordpress-chapters` already returns `pullQuote` + `pullQuoteCitation` correctly.
-- No font-size or color changes (user chose "balance line lengths" only).
+### Notes
+- Pure presentation change, no data or routing changes.
+- Works for both WordPress-sourced and static chapter sources since the TOC anchor exists in both rendering paths (we'll attach the `id` to the outer transition wrapper so it's always present).

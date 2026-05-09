@@ -1,16 +1,25 @@
-## Add "Back to Chapters" link at the end of each chapter
+## Changes
 
-### What
-After each chapter's body text, add a small centered link that scrolls the reader back to the Table of Contents section (which sits just below the hero image).
+### 1. Reduce space between chapters
+In `src/components/memoir/Chapter.tsx`, reduce the `<section>` vertical padding:
+- From: `py-20 sm:py-28 md:py-40`
+- To: `py-10 sm:py-14 md:py-20` (roughly half)
 
-### How
-1. In `src/pages/Index.tsx`, give the existing TOC wrapper an `id` (e.g. `id="toc"`) and a matching `scroll-mt-20` so the anchor lands just below the sticky-ish top.
-2. In `src/components/memoir/Chapter.tsx`, after the body `<div>`, add a centered anchor:
-   - Text: "↑ Back to chapters"
-   - `href="#toc"`
-   - Styled with the existing gold accent: small uppercase tracked label (`text-[10px] tracking-[0.5em] uppercase text-gold/80 hover:text-gold`), bracketed by the same shimmer hairlines used on the chapter eyebrow for visual symmetry.
-   - Wrap in a `<nav aria-label="Back to table of contents">` with top margin (`mt-12 sm:mt-16`).
+### 2. Replace "Back to chapters" link with a Playlist-style button
+Currently it's a centered anchor with shimmer rules and "↑ Back to chapters" text.
+
+New treatment, right-aligned at the end of each chapter:
+- Wrapper: `mt-10 sm:mt-12 flex justify-end` (right-aligned to body text width — placed inside the existing centered container but with a `max-w-prose w-full` wrapper so it aligns to the right edge of the body text)
+- Button: an `<a href="#toc">` styled to match the floating playlist tab:
+  - `inline-flex items-center gap-2 px-4 py-3 bg-card/90 backdrop-blur-md border border-gold/30 rounded-md shadow-cinematic`
+  - Label: `text-xs tracking-[0.3em] uppercase text-gold`
+  - Icon: `ArrowLeft` from `lucide-react` at `h-3.5 w-3.5`
+  - Text: `Back`
+  - Hover: subtle `hover:bg-card transition-colors`
+
+### Files
+- `src/components/memoir/Chapter.tsx` — only file touched.
 
 ### Notes
-- Pure presentation change, no data or routing changes.
-- Works for both WordPress-sourced and static chapter sources since the TOC anchor exists in both rendering paths (we'll attach the `id` to the outer transition wrapper so it's always present).
+- Pure presentation change; no logic, data, or routing changes.
+- "Right aligned to the text" interpreted as right-aligned to the body paragraph column (`max-w-prose`), not the full page width.

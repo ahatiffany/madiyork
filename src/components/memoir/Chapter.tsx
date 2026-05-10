@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { TiltImage } from "./TiltImage";
 import { AnimatedHeading } from "./AnimatedHeading";
 import { useReveal } from "@/hooks/useReveal";
@@ -84,14 +84,14 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         {/* Back to table of contents */}
         <nav
           aria-label="Back to table of contents"
-          className="mt-10 sm:mt-12 w-full max-w-prose flex justify-end"
+          className="mt-10 sm:mt-12 w-full max-w-prose flex justify-center"
         >
           <a
             href="#toc"
             className="inline-flex items-center gap-2 px-4 py-3 bg-card/90 backdrop-blur-md border border-gold/30 rounded-md shadow-cinematic text-xs tracking-[0.3em] uppercase text-gold hover:bg-card transition-colors"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back
+            <ArrowUp className="h-3.5 w-3.5" />
+            Top
           </a>
         </nav>
       </div>

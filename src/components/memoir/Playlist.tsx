@@ -42,6 +42,42 @@ export const Playlist = () => {
             />
           </div>
         </div>
+
+        <div className="mt-16 sm:mt-20">
+          <span className="text-[10px] sm:text-xs tracking-[0.5em] uppercase text-gold">Visual Inspirations</span>
+          <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-parchment mt-3 mb-4">
+            Scenes That Shaped <em>The Story</em>
+          </h3>
+          <p className="text-sm sm:text-base text-mist/80 max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed px-2">
+            Films and moments that lived in my head while writing.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left">
+            {[
+              { title: "Dean's Blue Hole", id: "uQITWbAaDx0" },
+              { title: "Breathless", id: "bdBuDg7mrT8" },
+              { title: "Tango 1", id: "YO73nkU3wEk" },
+              { title: "Tango 2", id: "i3vsiiRK5GU" },
+            ].map((v) => (
+              <figure key={v.id}>
+                <div className="relative rounded-md overflow-hidden shadow-cinematic border border-border bg-card aspect-video">
+                  <iframe
+                    title={v.title}
+                    src={`https://www.youtube.com/embed/${v.id}`}
+                    className="absolute inset-0 w-full h-full"
+                    frameBorder={0}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+                <figcaption className="font-display italic text-mist/80 text-sm sm:text-base text-center mt-3">
+                  {v.title}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

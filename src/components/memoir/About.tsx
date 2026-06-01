@@ -30,7 +30,7 @@ export const About = () => {
               Madi York is a writer of literary fiction.
             </p>
             <p>
-              <em>Ari Winters: The Blue Hole</em> is her latest novel — drawn from
+              <em>ARI WYNTER: The Blue Hole</em> is her latest novel — drawn from
               notebooks kept across two cities and thirteen winters.
             </p>
           </div>

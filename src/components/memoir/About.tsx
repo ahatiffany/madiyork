@@ -11,8 +11,8 @@ export const About = () => {
       id="about"
       className="reveal relative py-20 sm:py-28 md:py-40 px-5 sm:px-6 md:px-14"
     >
-      <div className="max-w-6xl mx-auto grid md:grid-cols-[auto_1fr] gap-10 md:gap-10 items-center">
-        <div className="max-w-[220px] sm:max-w-[280px] md:max-w-[340px] mx-auto md:mx-0 w-full">
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6 items-center">
+        <div className="max-w-[220px] sm:max-w-[280px] md:max-w-none mx-auto w-full">
           <TiltImage
             src={logo}
             alt="MY York logo — stylized M with feather quill"

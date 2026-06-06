@@ -3,13 +3,18 @@ import { TiltImage } from "./TiltImage";
 import { AnimatedHeading } from "./AnimatedHeading";
 import { useReveal } from "@/hooks/useReveal";
 
+export type ChapterBodyBlock =
+  | { type: "paragraph"; text: string }
+  | { type: "verse"; lines: string[] };
+
 export interface ChapterData {
   number: string;
   title: string;
   pullQuote: string;
   /** Optional citation shown beneath the pull-quote (from a WP pullquote block). */
   pullQuoteCitation?: string;
-  body: string[];
+  /** Plain strings are treated as paragraphs for backward compatibility. */
+  body: Array<string | ChapterBodyBlock>;
   image: string;
   imageAlt: string;
   imageCaption?: string;
@@ -17,6 +22,11 @@ export interface ChapterData {
   /** Deprecated — layout is now always centered. */
   reverse?: boolean;
 }
+
+const normalizeBodyBlock = (
+  block: string | ChapterBodyBlock,
+): ChapterBodyBlock =>
+  typeof block === "string" ? { type: "paragraph", text: block } : block;
 
 interface ChapterProps {
   chapter: ChapterData;
@@ -74,12 +84,32 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
           )}
         </figure>
 
-        {/* Body — justified on larger screens, left-aligned on mobile for readability */}
-        <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose text-left sm:text-justify">
-          {chapter.body.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+        {/* Body — paragraphs are justified on larger screens; verse blocks are centered + italic. */}
+        <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose w-full">
+          {chapter.body.map((raw, i) => {
+            const block = normalizeBodyBlock(raw);
+            if (block.type === "verse") {
+              return (
+                <div
+                  key={i}
+                  className="my-6 sm:my-8 font-display italic text-center text-parchment/90 leading-relaxed"
+                >
+                  {block.lines.map((line, li) => (
+                    <span key={li} className="block min-h-[1em]">
+                      {line || "\u00A0"}
+                    </span>
+                  ))}
+                </div>
+              );
+            }
+            return (
+              <p key={i} className="text-left sm:text-justify">
+                {block.text}
+              </p>
+            );
+          })}
         </div>
+
 
         {/* Back to table of contents */}
         <nav

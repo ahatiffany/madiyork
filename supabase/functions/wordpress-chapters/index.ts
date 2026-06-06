@@ -17,13 +17,17 @@ interface WPPost {
   categories: Record<string, unknown>;
 }
 
+type BodyBlock =
+  | { type: "paragraph"; text: string }
+  | { type: "verse"; lines: string[] };
+
 interface Chapter {
   id: number;
   number: string;
   title: string;
   pullQuote: string;
   pullQuoteCitation?: string;
-  body: string[];
+  body: BodyBlock[];
   image: string;
   imageAlt: string;
   imageCaption?: string;
@@ -50,6 +54,57 @@ const stripHtml = (html: string) =>
 const splitParagraphs = (html: string): string[] => {
   const blocks = html.split(/<\/p>/i).map((b) => stripHtml(b)).filter(Boolean);
   return blocks.length ? blocks : [stripHtml(html)].filter(Boolean);
+};
+
+/**
+ * Parse a WordPress "Verse" block (`<pre class="wp-block-verse">…</pre>`)
+ * into individual lines. Preserves blank lines as stanza breaks.
+ */
+const parseVerseBlock = (innerHtml: string): string[] => {
+  // Normalize <br> variants to newlines, then strip remaining tags per-line
+  // so that links/spans inside a verse line are kept as text.
+  const normalized = innerHtml
+    .replace(/<br\s*\/?>(\r?\n)?/gi, "\n")
+    .replace(/<\/p>\s*<p[^>]*>/gi, "\n\n")
+    .replace(/<\/?p[^>]*>/gi, "");
+  const rawLines = normalized.split(/\n/);
+  // Trim each line, but preserve blank lines as stanza breaks.
+  return rawLines.map((line) => stripHtml(line));
+};
+
+/**
+ * Walk the post content, extracting verse blocks as structured items and
+ * splitting everything else into paragraph items.
+ */
+const parseBody = (html: string): BodyBlock[] => {
+  if (!html) return [];
+  const verseRegex = /<pre[^>]*class=["'][^"']*wp-block-verse[^"']*["'][^>]*>([\s\S]*?)<\/pre>/gi;
+  const blocks: BodyBlock[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = verseRegex.exec(html)) !== null) {
+    const before = html.slice(lastIndex, match.index);
+    for (const p of splitParagraphs(before)) {
+      blocks.push({ type: "paragraph", text: p });
+    }
+    const lines = parseVerseBlock(match[1]);
+    // Trim leading/trailing blank lines but keep internal stanza breaks.
+    let start = 0;
+    let end = lines.length;
+    while (start < end && lines[start].trim() === "") start++;
+    while (end > start && lines[end - 1].trim() === "") end--;
+    const trimmed = lines.slice(start, end);
+    if (trimmed.length) blocks.push({ type: "verse", lines: trimmed });
+    lastIndex = verseRegex.lastIndex;
+  }
+
+  const tail = html.slice(lastIndex);
+  for (const p of splitParagraphs(tail)) {
+    blocks.push({ type: "paragraph", text: p });
+  }
+
+  return blocks;
 };
 
 const stripWordPressExcerptMore = (text: string) =>
@@ -156,11 +211,20 @@ Deno.serve(async (req) => {
       const tags = Object.keys(p.tags ?? {}).map((t) => t.toLowerCase());
       const { quote: excerptQuote, citation: excerptCitation } = parseExcerpt(p.excerpt || "");
       const contentPullQuote = extractPullQuoteFromContent(p.content || "");
-      const bodyParas = splitParagraphs(contentPullQuote.contentHtml || "");
-      // First paragraph as pull-quote if no excerpt
-      const pullQuote = contentPullQuote.quote || excerptQuote || bodyParas[0] || "";
+      const bodyBlocks = parseBody(contentPullQuote.contentHtml || "");
+      // First paragraph as pull-quote fallback if no excerpt/pullquote.
+      const firstParaIdx = bodyBlocks.findIndex((b) => b.type === "paragraph");
+      const firstParaText =
+        firstParaIdx >= 0 && bodyBlocks[firstParaIdx].type === "paragraph"
+          ? (bodyBlocks[firstParaIdx] as { type: "paragraph"; text: string }).text
+          : "";
+      const pullQuote = contentPullQuote.quote || excerptQuote || firstParaText;
       const pullQuoteCitation = contentPullQuote.citation || excerptCitation;
-      const body = contentPullQuote.quote || excerptQuote ? bodyParas : bodyParas.slice(1);
+      // If we fell back to the first paragraph for the pull-quote, drop it from body.
+      const body =
+        contentPullQuote.quote || excerptQuote || firstParaIdx < 0
+          ? bodyBlocks
+          : bodyBlocks.filter((_, idx) => idx !== firstParaIdx);
       const image = p.featured_image || firstImageSrc(p.content || "");
 
       return {
@@ -169,7 +233,7 @@ Deno.serve(async (req) => {
         title: stripHtml(p.title) || `Chapter ${i + 1}`,
         pullQuote,
         pullQuoteCitation,
-        body: body.length ? body : bodyParas,
+        body,
         image,
         imageAlt: stripHtml(p.title) || `Chapter ${i + 1} image`,
         imageCaption: new Date(p.date).toLocaleDateString("en-US", { month: "long", year: "numeric" }),

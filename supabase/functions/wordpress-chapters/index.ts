@@ -231,7 +231,8 @@ Deno.serve(async (req) => {
       const tags = Object.keys(p.tags ?? {}).map((t) => t.toLowerCase());
       const { quote: excerptQuote, citation: excerptCitation } = parseExcerpt(p.excerpt || "");
       const contentPullQuote = extractPullQuoteFromContent(p.content || "");
-      const bodyBlocks = parseBody(contentPullQuote.contentHtml || "");
+      const parsedBodyBlocks = parseBody(contentPullQuote.contentHtml || "");
+      const bodyBlocks = p.ID === 400 ? restoreChapterFourteenRepeatedVerse(parsedBodyBlocks) : parsedBodyBlocks;
       // First paragraph as pull-quote fallback if no excerpt/pullquote.
       const firstParaIdx = bodyBlocks.findIndex((b) => b.type === "paragraph");
       const firstParaText =

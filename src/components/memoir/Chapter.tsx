@@ -3,13 +3,18 @@ import { TiltImage } from "./TiltImage";
 import { AnimatedHeading } from "./AnimatedHeading";
 import { useReveal } from "@/hooks/useReveal";
 
+export type ChapterBodyBlock =
+  | { type: "paragraph"; text: string }
+  | { type: "verse"; lines: string[] };
+
 export interface ChapterData {
   number: string;
   title: string;
   pullQuote: string;
   /** Optional citation shown beneath the pull-quote (from a WP pullquote block). */
   pullQuoteCitation?: string;
-  body: string[];
+  /** Plain strings are treated as paragraphs for backward compatibility. */
+  body: Array<string | ChapterBodyBlock>;
   image: string;
   imageAlt: string;
   imageCaption?: string;
@@ -17,6 +22,11 @@ export interface ChapterData {
   /** Deprecated — layout is now always centered. */
   reverse?: boolean;
 }
+
+const normalizeBodyBlock = (
+  block: string | ChapterBodyBlock,
+): ChapterBodyBlock =>
+  typeof block === "string" ? { type: "paragraph", text: block } : block;
 
 interface ChapterProps {
   chapter: ChapterData;

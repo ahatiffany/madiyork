@@ -84,12 +84,32 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
           )}
         </figure>
 
-        {/* Body — justified on larger screens, left-aligned on mobile for readability */}
-        <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose text-left sm:text-justify">
-          {chapter.body.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+        {/* Body — paragraphs are justified on larger screens; verse blocks are centered + italic. */}
+        <div className="space-y-5 text-base md:text-lg text-parchment/90 leading-relaxed max-w-prose w-full">
+          {chapter.body.map((raw, i) => {
+            const block = normalizeBodyBlock(raw);
+            if (block.type === "verse") {
+              return (
+                <div
+                  key={i}
+                  className="my-6 sm:my-8 font-display italic text-center text-parchment/90 leading-relaxed"
+                >
+                  {block.lines.map((line, li) => (
+                    <span key={li} className="block min-h-[1em]">
+                      {line || "\u00A0"}
+                    </span>
+                  ))}
+                </div>
+              );
+            }
+            return (
+              <p key={i} className="text-left sm:text-justify">
+                {block.text}
+              </p>
+            );
+          })}
         </div>
+
 
         {/* Back to table of contents */}
         <nav

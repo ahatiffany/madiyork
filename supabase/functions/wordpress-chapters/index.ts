@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
       const { quote: excerptQuote, citation: excerptCitation } = parseExcerpt(p.excerpt || "");
       const contentPullQuote = extractPullQuoteFromContent(p.content || "");
       const parsedBodyBlocks = parseBody(contentPullQuote.contentHtml || "");
-      const bodyBlocks = p.ID === 400 ? restoreChapterFourteenRepeatedVerse(parsedBodyBlocks) : parsedBodyBlocks;
+      const bodyBlocks = parsedBodyBlocks;
       // First paragraph as pull-quote fallback if no excerpt/pullquote.
       const firstParaIdx = bodyBlocks.findIndex((b) => b.type === "paragraph");
       const firstParaText =

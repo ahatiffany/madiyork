@@ -107,25 +107,6 @@ const parseBody = (html: string): BodyBlock[] => {
   return blocks;
 };
 
-const isVerseWithFirstLine = (block: BodyBlock | undefined, firstLine: string) =>
-  block?.type === "verse" && block.lines[0]?.trim() === firstLine;
-
-const restoreChapterFourteenRepeatedVerse = (blocks: BodyBlock[]): BodyBlock[] => {
-  const repeatedFirstLine = "Your eyes meet mine,";
-  const repeatedCount = blocks.filter((block) => isVerseWithFirstLine(block, repeatedFirstLine)).length;
-  if (repeatedCount !== 1) return blocks;
-
-  const firstVerseIndex = blocks.findIndex((block) => isVerseWithFirstLine(block, repeatedFirstLine));
-  const chorusIndex = blocks.findIndex((block) => isVerseWithFirstLine(block, "Just one more dance before goodbye"));
-  if (firstVerseIndex < 0 || chorusIndex < 0 || chorusIndex <= firstVerseIndex) return blocks;
-
-  const repeatedVerse = blocks[firstVerseIndex];
-  return [
-    ...blocks.slice(0, chorusIndex),
-    { type: "verse", lines: [...(repeatedVerse as { type: "verse"; lines: string[] }).lines] },
-    ...blocks.slice(chorusIndex),
-  ];
-};
 
 const stripWordPressExcerptMore = (text: string) =>
   text.replace(/\s*(?:\[&hellip;\]|\[…\]|&hellip;|…)\s*$/i, "").trim();
@@ -232,7 +213,7 @@ Deno.serve(async (req) => {
       const { quote: excerptQuote, citation: excerptCitation } = parseExcerpt(p.excerpt || "");
       const contentPullQuote = extractPullQuoteFromContent(p.content || "");
       const parsedBodyBlocks = parseBody(contentPullQuote.contentHtml || "");
-      const bodyBlocks = p.ID === 400 ? restoreChapterFourteenRepeatedVerse(parsedBodyBlocks) : parsedBodyBlocks;
+      const bodyBlocks = parsedBodyBlocks;
       // First paragraph as pull-quote fallback if no excerpt/pullquote.
       const firstParaIdx = bodyBlocks.findIndex((b) => b.type === "paragraph");
       const firstParaText =

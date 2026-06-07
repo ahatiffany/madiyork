@@ -1,25 +1,17 @@
-## Goal
+## Issue
 
-WordPress "Verse" blocks (`<pre class="wp-block-verse">`), used in Chapter 14, are currently flattened to plain prose by the edge function — line breaks collapsed, no styling. Render them as centered, italic stanzas while leaving regular paragraphs unchanged.
+In `src/components/memoir/Chapter.tsx`, verse blocks render with `font-display` (Cormorant Garamond, a serif). Paragraphs use the default Inter (sans). At the same nominal font size (`text-base md:text-lg` inherited from the wrapper), Cormorant has a smaller x-height than Inter and visually reads noticeably smaller — especially visible in Chapter 14's poetry blocks.
 
-## Changes
+## Change
 
-### 1. `supabase/functions/wordpress-chapters/index.ts`
-- Replace the current `splitParagraphs` logic with a structured walker that, before stripping HTML, extracts `<pre class="...wp-block-verse...">…</pre>` blocks (also accept the `<verse>`/`<blockquote class="wp-block-verse">` variants) and represents each body item as either:
-  - `{ type: "paragraph", text: string }` — existing behavior
-  - `{ type: "verse", lines: string[] }` — split on `<br>` / newlines, each line HTML-stripped and trimmed, blanks preserved as stanza breaks
-- Update the `Chapter` interface's `body` field to `Array<BodyBlock>` and return the structured array.
+In `src/components/memoir/Chapter.tsx`, update the verse `<div>` to explicitly bump its type size so it optically matches surrounding paragraphs:
 
-### 2. `src/components/memoir/Chapter.tsx` + `src/data/chapters.ts`
-- Update `ChapterData.body` to the same `BodyBlock[]` union (keep backward-compatible by treating a `string` entry as a paragraph block when normalizing in the component).
-- In the body render loop:
-  - `paragraph` → existing `<p>` styling.
-  - `verse` → `<div class="my-6 text-center italic font-display text-parchment/90 leading-relaxed">` with each line as its own `<span class="block">`; blank lines render as an empty spacer line for stanza breaks.
-- Keep `text-justify` only for paragraph blocks.
+- Add `text-lg md:text-xl` to the verse container (Cormorant at roughly one step larger matches Inter's apparent size at `text-base md:text-lg`).
+- Keep `font-display italic text-center text-parchment/90 leading-relaxed` and the spacing classes as-is.
 
-### 3. `src/data/chapters.ts`
-- Adjust the fallback chapter typing so existing string bodies still satisfy the new union (string entries treated as paragraphs). No content change to fallback data.
+No other changes — paragraph styling, edge function, and content remain untouched.
 
 ## Out of scope
-- No styling/system token changes beyond using existing `font-display`, `text-parchment`, italics, and centering utilities.
-- No other WordPress block types.
+
+- Switching the verse font away from Cormorant
+- Any change to the WordPress edge function or chapter data

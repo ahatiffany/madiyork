@@ -55,6 +55,8 @@ export const TiltImage = ({
   priority = false,
   objectFit = "cover",
   sizes,
+  grain = true,
+  vignette = true,
 }: TiltImageProps) => {
   const wrapRef = useRef<HTMLDivElement>(null);
 

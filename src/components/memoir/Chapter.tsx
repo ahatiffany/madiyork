@@ -59,14 +59,16 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         />
 
         {/* Featured image — anchored between title and excerpt, uniform square */}
-        <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-8 sm:mb-10">
+        <div className="relative w-full max-w-sm md:max-w-md mx-auto mb-8 sm:mb-10">
           <div className="absolute -inset-6 sm:-inset-8 bg-gradient-spotlight opacity-60 blur-2xl pointer-events-none" />
-          <div className="relative aspect-square overflow-hidden rounded-sm shadow-cinematic">
+          <div className="relative aspect-square overflow-hidden rounded-sm shadow-cinematic bg-ink/40">
             <TiltImage
               src={chapter.image}
               alt={chapter.imageAlt}
               caption={chapter.imageCaption}
               is3D={chapter.is3D}
+              objectFit="contain"
+              sizes="(min-width: 768px) 28rem, 24rem"
               className="absolute inset-0 h-full w-full [&_figure]:h-full [&>div]:h-full"
             />
           </div>

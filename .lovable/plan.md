@@ -1,17 +1,33 @@
-## Issue
+# Uniform Chapter Featured Images
 
-In `src/components/memoir/Chapter.tsx`, verse blocks render with `font-display` (Cormorant Garamond, a serif). Paragraphs use the default Inter (sans). At the same nominal font size (`text-base md:text-lg` inherited from the wrapper), Cormorant has a smaller x-height than Inter and visually reads noticeably smaller — especially visible in Chapter 14's poetry blocks.
+## Goal
+Every chapter's featured image renders at the exact same square size, stays centered within that frame regardless of source aspect ratio, and remains sharp on high-DPI screens.
 
-## Change
+## Current behavior
+In `src/components/memoir/Chapter.tsx`, the featured image sits in a responsive square (`max-w-xs sm:max-w-sm md:max-w-md`, `aspect-square`) with `object-cover`. That already gives a uniform frame, but:
+- `object-cover` crops off-center subjects; tall/wide originals lose content instead of staying centered.
+- No `sizes` hint or width cap on the underlying `<img>`, so browsers may fetch under- or over-sized bitmaps → occasional softness.
+- WordPress often supplies multiple resolutions we're not using.
 
-In `src/components/memoir/Chapter.tsx`, update the verse `<div>` to explicitly bump its type size so it optically matches surrounding paragraphs:
+## Changes
 
-- Add `text-lg md:text-xl` to the verse container (Cormorant at roughly one step larger matches Inter's apparent size at `text-base md:text-lg`).
-- Keep `font-display italic text-center text-parchment/90 leading-relaxed` and the spacing classes as-is.
+### 1. `src/components/memoir/Chapter.tsx` — frame + fit
+- Keep the square frame but lock it to a single max width across breakpoints so every chapter matches pixel-for-pixel at a given viewport:
+  - `w-full max-w-sm md:max-w-md` (drop the `xs` step so small phones and larger phones don't diverge in ratio to surrounding text).
+- Change the image fit from `object-cover` to `object-contain` and center it:
+  - `object-contain object-center`
+  - Add a neutral backdrop inside the frame (`bg-ink/40`) so letterboxed edges read as intentional matte rather than a gap.
+- Result: every image occupies the identical square, centered, with no cropping.
 
-No other changes — paragraph styling, edge function, and content remain untouched.
+### 2. `src/components/memoir/TiltImage.tsx` — sharpness + centering
+- Pass through an `objectFit` prop (default `cover`, Chapter uses `contain`) so the tilt card doesn't force cropping.
+- Add `decoding="async"`, `sizes="(min-width: 768px) 28rem, 24rem"`, and `fetchPriority` matching the existing `priority` flag, so the browser picks the right resolution from the `srcset` when present.
+- If the `src` is a WordPress URL, derive a higher-DPI variant for `srcset` (e.g. append `?w=896` / `?w=448`) so 2× screens get a crisp bitmap. Fallback to plain `src` when the URL isn't WP-shaped.
 
-## Out of scope
+### 3. No data / edge-function changes
+Chapter content, ordering, and the `wordpress-chapters` function are untouched.
 
-- Switching the verse font away from Cormorant
-- Any change to the WordPress edge function or chapter data
+## Verification
+- Load `/` and scroll through chapters: every featured image frame is the same square, subject centered, no cropping, no layout shift.
+- Spot-check a portrait-oriented and a landscape-oriented source image — both fit fully inside the square with matte bars on the short axis.
+- DevTools → Network: image requests use the higher-resolution variant on a 2× viewport.

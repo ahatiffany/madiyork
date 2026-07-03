@@ -84,7 +84,9 @@ export const TiltImage = ({
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
         className={cn(
-          "relative overflow-hidden rounded-sm shadow-cinematic film-grain vignette",
+          "relative overflow-hidden rounded-sm shadow-cinematic",
+          grain && "film-grain",
+          vignette && "vignette",
           is3D && "tilt-card",
         )}
       >

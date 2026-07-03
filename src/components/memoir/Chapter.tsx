@@ -61,7 +61,7 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
         {/* Featured image — anchored between title and excerpt, uniform square */}
         <div className="relative w-full max-w-sm md:max-w-md mx-auto mb-8 sm:mb-10">
           <div className="absolute -inset-6 sm:-inset-8 bg-gradient-spotlight opacity-60 blur-2xl pointer-events-none" />
-          <div className="relative aspect-square overflow-hidden rounded-sm shadow-cinematic bg-ink/40">
+          <div className="relative aspect-square overflow-hidden rounded-sm shadow-cinematic bg-background">
             <TiltImage
               src={chapter.image}
               alt={chapter.imageAlt}

@@ -13,6 +13,10 @@ interface TiltImageProps {
   objectFit?: "cover" | "contain";
   /** Passed through to <img sizes>, helps the browser pick the right srcset entry. */
   sizes?: string;
+  /** Apply a subtle film-grain overlay. Defaults to true. */
+  grain?: boolean;
+  /** Apply a vignette edge gradient. Defaults to true. */
+  vignette?: boolean;
 }
 
 /** Build a WordPress-friendly srcset from a source URL. Returns undefined for non-WP URLs. */

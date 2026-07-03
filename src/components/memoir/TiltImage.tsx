@@ -13,6 +13,10 @@ interface TiltImageProps {
   objectFit?: "cover" | "contain";
   /** Passed through to <img sizes>, helps the browser pick the right srcset entry. */
   sizes?: string;
+  /** Apply a subtle film-grain overlay. Defaults to true. */
+  grain?: boolean;
+  /** Apply a vignette edge gradient. Defaults to true. */
+  vignette?: boolean;
 }
 
 /** Build a WordPress-friendly srcset from a source URL. Returns undefined for non-WP URLs. */
@@ -51,6 +55,8 @@ export const TiltImage = ({
   priority = false,
   objectFit = "cover",
   sizes,
+  grain = true,
+  vignette = true,
 }: TiltImageProps) => {
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -78,7 +84,9 @@ export const TiltImage = ({
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
         className={cn(
-          "relative overflow-hidden rounded-sm shadow-cinematic film-grain vignette",
+          "relative overflow-hidden rounded-sm shadow-cinematic",
+          grain && "film-grain",
+          vignette && "vignette",
           is3D && "tilt-card",
         )}
       >

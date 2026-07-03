@@ -69,6 +69,8 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
               is3D={chapter.is3D}
               objectFit="contain"
               sizes="(min-width: 768px) 28rem, 24rem"
+              grain={false}
+              vignette={false}
               className="absolute inset-0 h-full w-full [&_figure]:h-full [&>div]:h-full"
             />
           </div>

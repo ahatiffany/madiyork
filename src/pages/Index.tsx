@@ -7,7 +7,7 @@ import { Footer } from "@/components/memoir/Footer";
 import { useChapters } from "@/hooks/useChapters";
 
 const Index = () => {
-  const { chapters, source } = useChapters();
+  const { chapters, loading, source } = useChapters();
   // SEO: title + meta description for the memoir landing page.
   useEffect(() => {
     document.title = "ARI WYNTER: The Blue Hole — by Madi York";
@@ -27,7 +27,6 @@ const Index = () => {
       "ARI WYNTER: The Blue Hole — by Madi York. Read excerpts, see photographs, and listen to the soundtrack.",
     );
 
-    // Canonical
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!link) {
       link = document.createElement("link");
@@ -42,13 +41,16 @@ const Index = () => {
       <Hero />
 
       <section id="chapters" className="relative">
-        {/* Soft transition from hero into chapters */}
         <div id="toc" className="relative pt-16 sm:pt-20 pb-4 px-5 sm:px-6 text-center scroll-mt-20">
           <span className="text-[10px] tracking-[0.5em] sm:tracking-[0.6em] uppercase text-gold/80">
             The Chapters
           </span>
 
-          {source === "wordpress" ? (
+          {loading ? (
+            <p className="font-display italic text-mist/60 mt-6 text-base sm:text-lg">
+              Loading chapters…
+            </p>
+          ) : source === "wordpress" && chapters.length > 0 ? (
             <nav aria-label="Table of contents" className="mt-6 max-w-2xl mx-auto">
               <ul className="flex flex-col gap-2">
                 {chapters.map((c, i) => (
@@ -69,15 +71,16 @@ const Index = () => {
               </ul>
             </nav>
           ) : (
-            <p className="font-display italic text-mist/70 mt-3 text-base sm:text-lg">
-              Three excerpts from the memoir
+            <p className="font-display italic text-mist/60 mt-6 text-base sm:text-lg">
+              Chapters coming soon.
             </p>
           )}
         </div>
 
-        {chapters.map((c, i) => (
-          <Chapter key={`${c.number}-${i}`} chapter={c} index={i} />
-        ))}
+        {!loading &&
+          chapters.map((c, i) => (
+            <Chapter key={`${c.number}-${i}`} chapter={c} index={i} />
+          ))}
       </section>
 
       <Playlist />

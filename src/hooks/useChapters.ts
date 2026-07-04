@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { chapters as fallbackChapters } from "@/data/chapters";
 import type { ChapterData } from "@/components/memoir/Chapter";
 
 interface UseChaptersResult {
   chapters: ChapterData[];
   loading: boolean;
-  source: "wordpress" | "fallback";
+  source: "wordpress" | "empty";
 }
 
 /**
  * Fetches memoir chapters from WordPress.com via the `wordpress-chapters`
- * edge function. Falls back to the bundled sample chapters whenever the
- * site has no posts (e.g. the only post is the default "New Post" stub)
- * or the request fails — this keeps the cinematic experience intact while
- * the author is still drafting.
+ * edge function. Renders nothing until the fetch resolves; if it fails or
+ * returns no usable posts, chapters remain empty and the UI shows a small
+ * empty state instead of placeholder content.
  */
 export const useChapters = (): UseChaptersResult => {
-  const [chapters, setChapters] = useState<ChapterData[]>(fallbackChapters);
+  const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState<"wordpress" | "fallback">("fallback");
+  const [source, setSource] = useState<"wordpress" | "empty">("empty");
 
   useEffect(() => {
     let cancelled = false;
@@ -30,7 +28,6 @@ export const useChapters = (): UseChaptersResult => {
         if (error) throw error;
 
         const incoming = (data?.chapters ?? []) as ChapterData[];
-        // Skip placeholder posts (no real title/body, missing image).
         const usable = incoming.filter(
           (c) =>
             c.title &&
@@ -43,7 +40,7 @@ export const useChapters = (): UseChaptersResult => {
           setSource("wordpress");
         }
       } catch (e) {
-        console.warn("[useChapters] using fallback chapters:", e);
+        console.warn("[useChapters] failed to load chapters:", e);
       } finally {
         if (!cancelled) setLoading(false);
       }

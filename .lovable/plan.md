@@ -1,33 +1,27 @@
-# Uniform Chapter Featured Images
-
 ## Goal
-Every chapter's featured image renders at the exact same square size, stays centered within that frame regardless of source aspect ratio, and remains sharp on high-DPI screens.
 
-## Current behavior
-In `src/components/memoir/Chapter.tsx`, the featured image sits in a responsive square (`max-w-xs sm:max-w-sm md:max-w-md`, `aspect-square`) with `object-cover`. That already gives a uniform frame, but:
-- `object-cover` crops off-center subjects; tall/wide originals lose content instead of staying centered.
-- No `sizes` hint or width cap on the underlying `<img>`, so browsers may fetch under- or over-sized bitmaps → occasional softness.
-- WordPress often supplies multiple resolutions we're not using.
+Never show the bundled sample chapters. On first paint, render the Hero and section intro; the WordPress chapters appear when the fetch resolves. If the fetch fails or returns nothing, show a small empty state.
 
 ## Changes
 
-### 1. `src/components/memoir/Chapter.tsx` — frame + fit
-- Keep the square frame but lock it to a single max width across breakpoints so every chapter matches pixel-for-pixel at a given viewport:
-  - `w-full max-w-sm md:max-w-md` (drop the `xs` step so small phones and larger phones don't diverge in ratio to surrounding text).
-- Change the image fit from `object-cover` to `object-contain` and center it:
-  - `object-contain object-center`
-  - Add a neutral backdrop inside the frame (`bg-ink/40`) so letterboxed edges read as intentional matte rather than a gap.
-- Result: every image occupies the identical square, centered, with no cropping.
+**`src/hooks/useChapters.ts`**
+- Initialize `chapters` state as `[]` (remove `fallbackChapters` import and usage).
+- On successful fetch with usable posts → set chapters + `source: "wordpress"`.
+- On error or empty result → leave chapters as `[]`, `source: "fallback"` (or rename to `"empty"`).
+- Keep `loading` true until the fetch resolves.
 
-### 2. `src/components/memoir/TiltImage.tsx` — sharpness + centering
-- Pass through an `objectFit` prop (default `cover`, Chapter uses `contain`) so the tilt card doesn't force cropping.
-- Add `decoding="async"`, `sizes="(min-width: 768px) 28rem, 24rem"`, and `fetchPriority` matching the existing `priority` flag, so the browser picks the right resolution from the `srcset` when present.
-- If the `src` is a WordPress URL, derive a higher-DPI variant for `srcset` (e.g. append `?w=896` / `?w=448`) so 2× screens get a crisp bitmap. Fallback to plain `src` when the URL isn't WP-shaped.
+**`src/pages/Index.tsx`**
+- While `loading`, render Hero + section header, and show a small centered "Loading chapters…" line in the existing gold/mist styling in place of the TOC and chapter list.
+- After loading:
+  - If `chapters.length > 0` → render TOC + chapters as today.
+  - If `chapters.length === 0` → show a brief empty state (e.g. "Chapters coming soon.") in the same styling. No sample chapters.
 
-### 3. No data / edge-function changes
-Chapter content, ordering, and the `wordpress-chapters` function are untouched.
+**`src/data/chapters.ts`**
+- Delete the file (no longer referenced).
 
-## Verification
-- Load `/` and scroll through chapters: every featured image frame is the same square, subject centered, no cropping, no layout shift.
-- Spot-check a portrait-oriented and a landscape-oriented source image — both fit fully inside the square with matte bars on the short axis.
-- DevTools → Network: image requests use the higher-resolution variant on a 2× viewport.
+**`src/assets/chapter-1.jpg`, `chapter-2.jpg`, `chapter-3.jpg`**
+- Delete the three sample images (only used by `chapters.ts`).
+
+## Result
+
+The reader never sees the placeholder Chapter One/Two/Three. They see the Hero, a brief loading line, then the real WordPress chapters — or a clean empty state if WordPress is unreachable.

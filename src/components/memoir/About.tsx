@@ -30,8 +30,13 @@ export const About = () => {
               Madi York is a writer of literary fiction.
             </p>
             <p>
-              <em>ARI WYNTER: The Blue Hole</em> is her latest novel — drawn from
-              notebooks kept across two cities and thirteen winters.
+              <em>ARI WYNTER: The Blue Hole</em> is the first book in a series of four.
+            </p>
+            <p>
+              Other books in the series:<br />
+              <em>ARI WYNTER: Smugglers Cove</em><br />
+              <em>ARI WYNTER: Ruins of Antioch</em><br />
+              <em>ARI WYNTER: Mountains of the Moon</em>
             </p>
           </div>
 

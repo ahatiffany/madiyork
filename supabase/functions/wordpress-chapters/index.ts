@@ -88,7 +88,7 @@ const parseVerseBlock = (innerHtml: string): string[] => {
     .replace(/<\/?p[^>]*>/gi, "");
   const rawLines = normalized.split(/\n/);
   // Trim each line, but preserve blank lines as stanza breaks.
-  return rawLines.map((line) => stripHtml(line));
+  return rawLines.map((line) => stripHtmlKeepInline(line));
 };
 
 /**

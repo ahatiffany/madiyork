@@ -101,17 +101,21 @@ export const Chapter = ({ chapter, index }: ChapterProps) => {
                   className="my-6 sm:my-8 font-display italic text-center text-parchment/90 leading-relaxed text-lg md:text-xl"
                 >
                   {block.lines.map((line, li) => (
-                    <span key={li} className="block min-h-[1em]">
-                      {line || "\u00A0"}
-                    </span>
+                    <span
+                      key={li}
+                      className="block min-h-[1em]"
+                      dangerouslySetInnerHTML={{ __html: line || "&nbsp;" }}
+                    />
                   ))}
                 </div>
               );
             }
             return (
-              <p key={i} className="text-left sm:text-justify">
-                {block.text}
-              </p>
+              <p
+                key={i}
+                className="text-left sm:text-justify"
+                dangerouslySetInnerHTML={{ __html: block.text }}
+              />
             );
           })}
         </div>

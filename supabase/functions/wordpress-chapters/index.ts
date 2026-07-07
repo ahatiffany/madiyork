@@ -34,11 +34,8 @@ interface Chapter {
   is3D: boolean;
 }
 
-const stripHtml = (html: string) =>
-  html
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<[^>]+>/g, "")
+const decodeEntities = (s: string) =>
+  s
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
@@ -47,13 +44,35 @@ const stripHtml = (html: string) =>
     .replace(/&#8220;|&#8221;/g, '"')
     .replace(/&#8211;|&#8212;/g, "—")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    .replace(/&gt;/g, ">");
+
+const stripHtml = (html: string) =>
+  decodeEntities(
+    html
+      .replace(/<style[\s\S]*?<\/style>/gi, "")
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/<[^>]+>/g, ""),
+  )
     .replace(/\s+/g, " ")
     .trim();
 
+/**
+ * Like stripHtml, but preserves a tiny allow-list of inline formatting tags
+ * (<em>, <i>, <strong>, <b>) so WordPress italics/bold survive into the app.
+ * All attributes are dropped; every other tag is removed.
+ */
+const stripHtmlKeepInline = (html: string) => {
+  const cleaned = html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<(\/?)(em|i|strong|b)(?:\s[^>]*)?>/gi, (_m, slash, tag) => `<${slash}${tag.toLowerCase()}>`)
+    .replace(/<(?!\/?(?:em|i|strong|b)>)[^>]+>/gi, "");
+  return decodeEntities(cleaned).replace(/\s+/g, " ").trim();
+};
+
 const splitParagraphs = (html: string): string[] => {
-  const blocks = html.split(/<\/p>/i).map((b) => stripHtml(b)).filter(Boolean);
-  return blocks.length ? blocks : [stripHtml(html)].filter(Boolean);
+  const blocks = html.split(/<\/p>/i).map((b) => stripHtmlKeepInline(b)).filter(Boolean);
+  return blocks.length ? blocks : [stripHtmlKeepInline(html)].filter(Boolean);
 };
 
 /**
@@ -69,7 +88,7 @@ const parseVerseBlock = (innerHtml: string): string[] => {
     .replace(/<\/?p[^>]*>/gi, "");
   const rawLines = normalized.split(/\n/);
   // Trim each line, but preserve blank lines as stanza breaks.
-  return rawLines.map((line) => stripHtml(line));
+  return rawLines.map((line) => stripHtmlKeepInline(line));
 };
 
 /**

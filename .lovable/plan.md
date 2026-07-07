@@ -1,27 +1,32 @@
-## Goal
+## Problem
 
-Update the author About section (`src/components/memoir/About.tsx`) to the new copy provided by the user and italicize every book title with `<em>` tags.
+Italic text authored in WordPress (`<em>` / `<i>`) renders as plain text on the site. The edge function `supabase/functions/wordpress-chapters/index.ts` runs every paragraph and verse line through `stripHtml`, which removes ALL tags — so `<em>`, `<i>`, `<strong>`, `<b>` are discarded before the content ever reaches the frontend. The frontend then renders body text as plain strings inside `<p>{block.text}</p>`, which wouldn't render HTML anyway.
 
-## Copy
+## Fix
 
-```
-Madi York is a writer of literary fiction.
+Preserve a small allow-list of safe inline formatting tags end-to-end.
 
-ARI WYNTER: The Blue Hole is the first book in a series of four.
+### 1. Edge function — `supabase/functions/wordpress-chapters/index.ts`
 
-Other books in the series:
-ARI WYNTER: Smugglers Cove
-ARI WYNTER: Ruins of Antioch
-ARI WYNTER: Mountains of the Moon
-```
+- Add a new helper `stripHtmlKeepInline(html)` that behaves like `stripHtml` but preserves `<em>`, `<i>`, `<strong>`, `<b>` (and their closing tags). All other tags, scripts, styles, and entities are handled exactly as today.
+- Use `stripHtmlKeepInline` for:
+  - Paragraph text inside `splitParagraphs`
+  - Verse lines inside `parseVerseBlock`
+- Keep the existing `stripHtml` for titles, pull-quote text, citations, and image alt text (those should stay plain).
 
-## Book titles to italicize
+### 2. Frontend — `src/components/memoir/Chapter.tsx`
 
-- ARI WYNTER: The Blue Hole
-- ARI WYNTER: Smugglers Cove
-- ARI WYNTER: Ruins of Antioch
-- ARI WYNTER: Mountains of the Moon
+- Render paragraph and verse content with `dangerouslySetInnerHTML` since the body now contains a tiny allow-list of inline tags:
+  - Paragraph: `<p ... dangerouslySetInnerHTML={{ __html: block.text }} />`
+  - Verse line: `<span ... dangerouslySetInnerHTML={{ __html: line || "&nbsp;" }} />`
+- Safety: the edge function is the only writer of this content and only lets `<em>/<i>/<strong>/<b>` through — no attributes, no scripts, no links — so this is a bounded allow-list, not arbitrary HTML.
 
-## Changes
+### 3. No other changes
 
-- `src/components/memoir/About.tsx` — replace existing paragraph block with new copy, wrapping each book title in `<em>…</em>`.
+- Pull-quote, citation, title, TOC, and About section are unaffected.
+- No CSS changes: Tailwind's default styles already italicize `<em>`/`<i>` and bold `<strong>`/`<b>`.
+
+## Verification
+
+- Reload the preview; any WordPress chapter paragraph containing italicized words (e.g. book titles, foreign terms) should now render italic.
+- Non-italic paragraphs should look identical to today.
